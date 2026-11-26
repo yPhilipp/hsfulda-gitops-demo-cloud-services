@@ -2,7 +2,7 @@
 
 replicaCount: 3
 image:
-  repository: ghcr.io/drschlaubi/hsfulda-argocd-demo/calendar-app
+  repository: ghcr.io/yphilipp/hsfulda-gitops-demo-cloud-services/calendar-app
   tag: main
   pullPolicy: IfNotPresent
 service:

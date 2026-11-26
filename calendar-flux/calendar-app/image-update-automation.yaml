@@ -3,7 +3,7 @@ kind: ImageRepository
 metadata:
   name: calendar-app
 spec:
-  image: ghcr.io/drschlaubi/hsfd-gitops-example/calendar-app
+  image: ghcr.io/yphilipp/hsfulda-gitops-demo-cloud-services/calendar-app
   interval: 5m
 ---
 kind: ImagePolicy

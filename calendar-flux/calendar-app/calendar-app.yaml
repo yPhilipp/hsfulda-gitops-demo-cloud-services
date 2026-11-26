@@ -4,7 +4,7 @@ metadata:
   name: calendar-app
 spec:
   interval: 24h
-  url: oci://ghcr.io/drschlaubi/hsfd-gitops-example/calendar-app-chart
+  url: oci://ghcr.io/yphilipp/hsfulda-gitops-demo-cloud-services/calendar-app-chart
   ref:
     semver: "1.x"
 ---

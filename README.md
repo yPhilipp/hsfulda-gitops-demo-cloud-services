@@ -3,7 +3,7 @@
 This project consists of a calendar application with event management functionality and its Helm chart for Kubernetes deployment.
 
 ## Template status
-![Template status: unready](https://img.shields.io/badge/Template%20status-unready-red)
+![Template status: ready](https://img.shields.io/badge/Template%20status-ready-brightgreen)
 
 ## Project Structure
 
