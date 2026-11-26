@@ -1,0 +1,4 @@
+namespace: calendar-app
+resources:
+  - image-update-automation.yaml
+  - calendar-app.yaml

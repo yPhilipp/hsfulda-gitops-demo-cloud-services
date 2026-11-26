@@ -1,0 +1,45 @@
+services:
+  mariadb:
+    image: mariadb:lts
+    container_name: calendar-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: calendarDB
+      MARIADB_USER: calendaruser
+      MARIADB_PASSWORD: 12123434example
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - ./calendar-app/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  app:
+    build: 
+      context: ./calendar-app
+    ports:
+      - "3000:3000"
+    environment:
+      MYSQL_HOST: mariadb
+      MYSQL_USER: calendaruser
+      MYSQL_PASSWORD: 12123434example
+      MYSQL_DATABASE: calendarDB
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    restart: unless-stopped
+    command: >
+      sh -c "
+        echo 'Waiting 15 seconds for MySQL to be fully ready...'
+        sleep 15
+        node server.js
+      "
+
+volumes:
+  mysql_data: 

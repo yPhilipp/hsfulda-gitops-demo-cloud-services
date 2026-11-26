@@ -1,0 +1,39 @@
+name: Helm Chart
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - calendar-chart/**
+      - .github/workflows/helm_chart.yaml
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+jobs:
+  push:
+    name: Push Helm Chart
+    runs-on: ubuntu-latest
+    if: github.event.head_commit.message != 'Initial Commit'
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set lowercased repository name
+        run: |
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "REPO_LOWER=$REPO_LOWER" >> "$GITHUB_ENV"
+      - name: Set chart version
+        working-directory: calendar-chart
+        run: |
+          yq -i '.version = "1.0.${{ github.run_number }}"' Chart.yaml
+      - name: Log in to the OCI registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@main
+        with:
+          charts_dir: .
+          oci_registry_url: oci://ghcr.io/${{ env.REPO_LOWER }}
+          skip_release: true

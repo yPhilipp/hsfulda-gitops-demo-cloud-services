@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: calendar-app
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: headlamp
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: calendar-app
+  namespace: calendar-app
+spec:
+  interval: 5m
+  path: ./calendar-flux/calendar-app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: headlamp
+  namespace: headlamp
+spec:
+  interval: 5m
+  path: ./calendar-flux/headlamp
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system

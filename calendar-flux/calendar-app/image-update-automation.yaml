@@ -1,0 +1,48 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: calendar-app
+spec:
+  image: ghcr.io/drschlaubi/hsfd-gitops-example/calendar-app
+  interval: 5m
+---
+kind: ImagePolicy
+apiVersion: image.toolkit.fluxcd.io/v1
+metadata:
+  name: calendar-app
+spec:
+  interval: 5m
+  imageRepositoryRef:
+    name: calendar-app
+  digestReflectionPolicy: Always
+  filterTags:
+    pattern: '^main-(?P<num>[0-9]+)$'
+    extract: '$num'
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: calendar-app
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  update:
+    path: ./calendar-flux
+    strategy: Setters
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: '{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
+    push:
+      branch: main
